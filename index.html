@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>A Jornada do Pequeno Explorador</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        background-color: #f2f2f2;
+        color: #333;
+        /* Cor do texto */
+        margin: 0;
+        padding: 20px;
+      }
+
+      .page-container {
+        background-color: white;
+        max-width: 800px;
+        margin: 20px auto;
+        padding: 20px;
+        border: 1px solid #ccc;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        position: relative;
+      }
+
+      h1 {
+        text-align: center;
+        font-size: 24px;
+        margin-bottom: 20px;
+        color: black;
+        /* Cor do título */
+      }
+
+      p {
+        text-indent: 20px;
+        line-height: 1.6;
+        color: black;
+        /* Cor do texto */
+      }
+
+      .button-container {
+        text-align: center;
+        margin-top: 20px;
+        opacity: 0;
+        transition: opacity 0.3s ease;
+      }
+
+      .button-container:hover {
+        opacity: 1;
+      }
+
+      .button {
+        padding: 10px 20px;
+        font-size: 16px;
+        background-color: #4CAF50;
+        color: white;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+      }
+
+      .button:hover {
+        background-color: #45a049;
+      }
+
+      .progress-bar {
+        margin-top: 20px;
+        background-color: #ccc;
+        height: 10px;
+        border-radius: 5px;
+        overflow: hidden;
+      }
+
+      .progress-indicator {
+        background-color: #4CAF50;
+        height: 100%;
+        width: 11.1%;
+        /* (100% / 9 pages) */
+        transition: width 0.3s ease-in-out;
+      }
+
+      .mark-button {
+        margin-top: 10px;
+        font-size: 14px;
+        background-color: #008CBA;
+        color: white;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        padding: 8px 16px;
+      }
+
+      .mark-button:hover {
+        background-color: #005A79;
+      }
+
+      .bookmark {
+        position: absolute;
+        top: 5px;
+        right: 5px;
+        width: 20px;
+        height: 20px;
+        background-color: red;
+        border-radius: 50%;
+        display: none;
+      }
+
+      .marked .bookmark {
+        display: block;
+      }
+
+      .gear-button {
+        position: absolute;
+        top: 0;
+        right: 10px;
+        padding: 8px;
+        font-size: 20px;
+        background-color: #555;
+        color: white;
+        border: none;
+        border-radius: 50%;
+        cursor: pointer;
+      }
+
+      .gear-button:hover {
+        background-color: #333;
+      }
+
+      .button-container-centralized {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+      }
+
+      /* Estilos para o modo escuro */
+      .dark-mode .page-container {
+        background-color: black;
+        /* Fundo preto */
+        color: white;
+        /* Texto branco */
+      }
+    </style>
+    <script type="text/javascript" src="./index.js" defer=""></script>
+    <link rel="stylesheet" href="./index.css">
+  </head>
+
+  <body>
+    <div id="pageContainer" class="page-container">
+      <div class="bookmark"></div>
+      <h1>Página 1</h1>
+      <p>Era uma vez, em uma pequena cidade, vivia um menino chamado Lucas. Lucas adorava explorar e descobrir coisas novas.</p>
+    </div>
+    <div class="button-container">
+      <button class="button" onclick="previousPage()">⬅️</button>
+      <button class="button" onclick="nextPage()">➡️</button>
+    </div>
+    <div class="progress-bar">
+      <div id="progressIndicator" class="progress-indicator"></div>
+    </div>
+    <div class="button-container-centralized">
+      <button class="mark-button" onclick="toggleMark()">Marcar/Desmarcar Página</button>
+      <button class="gear-button" onclick="toggleDarkMode()">⚙️</button>
+    </div>
+
+    <script>
+      let currentPage = 1;
+      let markedPage = 0; // Inicialmente nenhuma página está marcada
+      const totalPages = 9;
+
+      function nextPage() {
+        if (currentPage < totalPages) {
+          currentPage++;
+          updatePage();
+        }
+      }
+
+      function previousPage() {
+        if (currentPage > 1) {
+          currentPage--;
+          updatePage();
+        }
+      }
+
+      function updatePage() {
+        const pageContainer = document.getElementById('pageContainer');
+        pageContainer.innerHTML = `
+                <div class="bookmark"></div>
+                <h1>Página ${currentPage}</h1>
+                <p>${getPageContent(currentPage)}</p>
+            `;
+        updateProgress();
+        updateMarkButton();
+      }
+
+      function getPageContent(pageNumber) {
+        switch (pageNumber) {
+          case 1:
+            return "Um dia, Lucas decidiu embarcar em uma aventura para encontrar o tesouro perdido que diziam estar escondido na floresta além da cidade.";
+          case 2:
+            return "Com sua mochila nas costas e um mapa em mãos, Lucas começou sua jornada. Ele sabia que precisava ser corajoso e esperto para enfrentar os desafios que encontraria pelo caminho.";
+          case 3:
+            return "No caminho, Lucas encontrou um riacho. Ele teve que usar suas habilidades de navegação para atravessá-lo com segurança, pulando de pedra em pedra.";
+          case 4:
+            return "Mais adiante, Lucas se deparou com uma árvore gigante. Ele teve que usar sua criatividade para construir uma escada improvisada e subir até o topo, de onde pôde avistar a próxima etapa de sua jornada.";
+          case 5:
+            return "Finalmente, Lucas chegou à entrada de uma caverna escura. Ele acendeu sua lanterna e entrou corajosamente, determinado a encontrar o tesouro perdido.";
+          case 6:
+            return "Dentro da caverna, Lucas encontrou vários desafios, como quebra-cabeças e enigmas. Ele teve que usar sua inteligência e perspicácia para resolvê-los um a um.";
+          case 7:
+            return "Depois de superar todos os desafios, Lucas finalmente chegou à sala do tesouro. Ele abriu o baú e ficou maravilhado com as joias brilhantes e moedas antigas que encontrou lá dentro.";
+          case 8:
+            return "Lucas voltou para casa com o tesouro, sentindo-se orgulhoso de sua conquista. Ele aprendeu que com coragem, determinação e inteligência, podemos superar qualquer desafio que enfrentamos em nossas vidas.";
+          case 9:
+            return "Muito obrigado por ver minha história,foi isso que consegui fazer com o Chat!";
+          default:
+            return "";
+        }
+      }
+
+      function updateProgress() {
+        const progressIndicator = document.getElementById('progressIndicator');
+        const progress = (currentPage / totalPages) * 100;
+        progressIndicator.style.width = `${progress}%`;
+      }
+
+      function toggleMark() {
+        const pageContainer = document.getElementById('pageContainer');
+        if (markedPage !== currentPage) {
+          pageContainer.classList.add('marked');
+          markedPage = currentPage;
+        } else {
+          pageContainer.classList.remove('marked');
+          markedPage = 0;
+        }
+        updateMarkButton();
+      }
+
+      function updateMarkButton() {
+        const pageContainer = document.getElementById('pageContainer');
+        const bookmark = pageContainer.querySelector('.bookmark');
+        if (markedPage === currentPage) {
+          bookmark.style.display = 'block';
+        } else {
+          bookmark.style.display = 'none';
+        }
+        const markButton = document.querySelector('.mark-button');
+        if (markedPage !== currentPage) {
+          markButton.textContent = 'Marcar Página';
+        } else {
+          markButton.textContent = 'Desmarcar Página';
+        }
+      }
+
+      // Função para alternar o modo escuro
+      function toggleDarkMode() {
+        const pageContainer = document.querySelector('.page-container');
+        const title = document.querySelector('h1');
+        const text = document.querySelector('p');
+
+        pageContainer.classList.toggle('dark-mode');
+        title.classList.toggle('dark-mode');
+        text.classList.toggle('dark-mode');
+      }
+
+      updatePage();
+    </script>
+
+  </body>
+
+</html>
